@@ -1,0 +1,42 @@
+Model:
+    arch: videomae_pooling
+#    task: grs_classification_regression
+    num_outputs:
+        grs:
+            total_num_outputs: 5   # 4(classification) + 1(regression)
+            num_grs_classification: 4
+            num_grs_regression: 1
+        osats:
+            total_num_outputs: 48   # (5(classification) + 1(regression) x 8
+            num_osats_classification: [5, 5, 5, 5, 5, 5, 5, 5]
+            num_osats_regression: [1, 1, 1, 1, 1, 1, 1, 1]
+    videomae:
+        params:
+            clip_duration: 3.2  # 5fps x 16frames
+            overlap: 0.0
+        pretrained: videomae_pretrained_LR1e-4.pth
+    pooling:
+        approach: global_pooling  # global_pooling, attention_pooling
+        dim: &dim 768
+    mlp:
+        params:
+            in_channels: *dim
+#            hidden_channels: [256, *num_classes]
+            norm_layer: nn.LayerNorm
+            activation_layer: nn.ReLU
+            inplace: None
+            bias: True
+            dropout: 0.2
+        pretrained_grs: 
+            - 250825_083944_videomae_global_pooling_grs_cr_cv0-LR9e-05-VMold_LW0.05-epoch=297-valid_loss=1.30.ckpt
+            - 250825_084704_videomae_global_pooling_grs_cr_cv1-LR9e-05-VMold_LW0.05-epoch=246-valid_loss=1.73.ckpt
+            - 250825_085423_videomae_global_pooling_grs_cr_cv2-LR9e-05-VMold_LW0.05-epoch=212-valid_loss=1.45.ckpt
+            - 250825_090143_videomae_global_pooling_grs_cr_cv3-LR9e-05-VMold_LW0.05-epoch=127-valid_loss=1.70.ckpt
+            - 250825_090902_videomae_global_pooling_grs_cr_cv4-LR9e-05-VMold_LW0.05-epoch=147-valid_loss=1.59.ckpt
+        pretrained_osats:
+            - 250825_084012_videomae_global_pooling_osats_cr_cv0-LR8e-05-VMold_LW0.1-epoch=371-valid_loss=1.14.ckpt
+            - 250825_084844_videomae_global_pooling_osats_cr_cv1-LR8e-05-VMold_LW0.1-epoch=303-valid_loss=1.21.ckpt
+            - 250825_085715_videomae_global_pooling_osats_cr_cv2-LR8e-05-VMold_LW0.1-epoch=388-valid_loss=1.07.ckpt
+            - 250825_090545_videomae_global_pooling_osats_cr_cv3-LR8e-05-VMold_LW0.1-epoch=390-valid_loss=1.16.ckpt
+            - 250825_091417_videomae_global_pooling_osats_cr_cv4-LR8e-05-VMold_LW0.1-epoch=303-valid_loss=1.16.ckpt
+
